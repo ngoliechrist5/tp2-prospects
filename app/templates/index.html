@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Prospects</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        form { display: grid; gap: 10px; margin-bottom: 40px; }
+        label { font-weight: bold; font-size: 14px; }
+        input, select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px; background: #2c3e50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #34495e; }
+        #message { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 13px; }
+        th { background: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <h1>Enregistrement d'un Prospect</h1>
+
+    <form id="prospectForm">
+        <label>Nom</label>
+        <input type="text" id="nom" required>
+
+        <label>Prénom</label>
+        <input type="text" id="prenom" required>
+
+        <label>Date de naissance</label>
+        <input type="date" id="date_naissance" required>
+
+        <label>Lieu de naissance</label>
+        <input type="text" id="lieu_naissance" required>
+
+        <label>Profession</label>
+        <input type="text" id="profession" required>
+
+        <label>Secteur d'activité</label>
+        <select id="secteur_activite" required>
+            <option value="">-- Choisir --</option>
+            <option>Banque/Finance</option>
+            <option>Télécommunications</option>
+            <option>Administration publique</option>
+            <option>Commerce</option>
+            <option>Éducation</option>
+            <option>Santé</option>
+            <option>Industrie</option>
+            <option>Agriculture</option>
+            <option>Autre</option>
+        </select>
+
+        <label>Téléphone</label>
+        <input type="text" id="telephone" placeholder="+241 74 12 34 56" required>
+
+        <label>E-mail</label>
+        <input type="email" id="email" required>
+
+        <button type="submit">Enregistrer le prospect</button>
+    </form>
+
+    <div id="message"></div>
+
+    <h2>Liste des prospects</h2>
+    <table id="prospectsTable">
+        <thead>
+            <tr><th>Nom</th><th>Prénom</th><th>E-mail</th><th>Téléphone</th><th>Secteur</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        const form = document.getElementById('prospectForm');
+        const message = document.getElementById('message');
+        const tableBody = document.querySelector('#prospectsTable tbody');
+
+        async function chargerProspects() {
+            const reponse = await fetch('/prospects');
+            const prospects = await reponse.json();
+            tableBody.innerHTML = '';
+            prospects.forEach(p => {
+                const ligne = document.createElement('tr');
+                ligne.innerHTML = `<td>${p.nom}</td><td>${p.prenom}</td><td>${p.email}</td><td>${p.telephone}</td><td>${p.secteur_activite}</td>`;
+                tableBody.appendChild(ligne);
+            });
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                nom: document.getElementById('nom').value,
+                prenom: document.getElementById('prenom').value,
+                date_naissance: document.getElementById('date_naissance').value,
+                lieu_naissance: document.getElementById('lieu_naissance').value,
+                profession: document.getElementById('profession').value,
+                secteur_activite: document.getElementById('secteur_activite').value,
+                telephone: document.getElementById('telephone').value,
+                email: document.getElementById('email').value
+            };
+
+            const reponse = await fetch('/prospects', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const resultat = await reponse.json();
+            message.style.display = 'block';
+
+            if (reponse.ok) {
+                message.className = 'success';
+                message.textContent = 'Prospect enregistré avec succès !';
+                form.reset();
+                chargerProspects();
+            } else {
+                message.className = 'error';
+                message.textContent = resultat.erreurs ? resultat.erreurs.join(' | ') : 'Erreur inconnue';
+            }
+        });
+
+        chargerProspects();
+    </script>
+</body>
+</html>

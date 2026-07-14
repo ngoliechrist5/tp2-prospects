@@ -1,3 +1,4 @@
+from flask import render_template
 from flask import Blueprint, request, jsonify
 from datetime import datetime
 from app import db
@@ -6,6 +7,9 @@ from app.validators import valider_prospect
 
 prospects_bp = Blueprint('prospects', __name__)
 
+@prospects_bp.route('/', methods=['GET'])
+def afficher_formulaire():
+    return render_template('index.html')
 
 @prospects_bp.route('/prospects', methods=['POST'])
 def creer_prospect():
