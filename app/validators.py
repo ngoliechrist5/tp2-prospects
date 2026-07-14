@@ -63,18 +63,23 @@ def valider_prospect(data):
     erreurs = []
 
     err = valider_nom_prenom(data.get('nom'), "nom")
-    if err: erreurs.append(err)
+    if err:
+        erreurs.append(err)
 
     err = valider_nom_prenom(data.get('prenom'), "prénom")
-    if err: erreurs.append(err)
+    if err:
+        erreurs.append(err)
 
     err = valider_email(data.get('email'))
-    if err: erreurs.append(err)
+    if err:
+        erreurs.append(err)
 
     err = valider_telephone(data.get('telephone'))
-    if err: erreurs.append(err)
+    if err:
+        erreurs.append(err)
 
     err = valider_secteur_activite(data.get('secteur_activite'))
-    if err: erreurs.append(err)
+    if err:
+        erreurs.append(err)
 
     return erreurs

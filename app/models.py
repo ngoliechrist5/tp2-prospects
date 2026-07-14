@@ -1,6 +1,7 @@
 from app import db
 from datetime import datetime
 
+
 class Prospect(db.Model):
     __tablename__ = 'prospects'
 
