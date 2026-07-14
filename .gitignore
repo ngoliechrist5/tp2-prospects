@@ -1,0 +1,17 @@
+# Environnement virtuel Python
+venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+
+# Docker
+*.log
+
+# Éditeurs
+.vscode/
+.idea/
+
+# Base de données locale
+*.sqlite3
