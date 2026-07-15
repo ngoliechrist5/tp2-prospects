@@ -7,9 +7,11 @@ from app.validators import valider_prospect
 
 prospects_bp = Blueprint('prospects', __name__)
 
+
 @prospects_bp.route('/', methods=['GET'])
 def afficher_formulaire():
     return render_template('index.html')
+
 
 @prospects_bp.route('/prospects', methods=['POST'])
 def creer_prospect():
